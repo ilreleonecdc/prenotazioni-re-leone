@@ -36,6 +36,9 @@
 				--blue-bg: #e6f1fb;
 				--blue-bd: #85b7eb;
 				--blue-tx: #185fa5;
+				--amber-bg: #fdf3e0;
+				--amber-bd: #e8a020;
+				--amber-tx: #7a4f0a;
 				--rad: 8px;
 				--rad-lg: 12px;
 			}
@@ -55,6 +58,9 @@
 					--blue-bg: #042c53;
 					--blue-bd: #185fa5;
 					--blue-tx: #b5d4f4;
+					--amber-bg: #3a2800;
+					--amber-bd: #c47f00;
+					--amber-tx: #fcd87a;
 				}
 			}
 			*,
@@ -231,6 +237,12 @@
 				background: var(--green-bg);
 				border-color: var(--green-bd);
 				color: var(--green-tx);
+				cursor: default;
+			}
+			.posto.incompleto {
+				background: var(--amber-bg);
+				border-color: var(--amber-bd);
+				color: var(--amber-tx);
 				cursor: default;
 			}
 			.posto.mio {
@@ -658,7 +670,8 @@
 							const p = pren[i];
 							if (p) {
 								const mio = miei.includes(p.id);
-								return `<div class="posto ${mio ? "mio" : "occupato"}"
+								const incompleto = !mio && pren.length < 2;
+								return `<div class="posto ${mio ? "mio" : incompleto ? "incompleto" : "occupato"}"
           ${mio ? `onclick="cancella('${giornoCorrente}',${h},'${p.id}')" title="Clicca per cancellare"` : ""}>
           ${mio ? ico.x : ico.user}
           <span class="posto-nome">${escHtml(p.nome)}</span>
