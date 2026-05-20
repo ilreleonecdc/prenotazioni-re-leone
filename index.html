@@ -389,17 +389,23 @@
 				margin-bottom: 0.5rem;
 				border: #ef9f27;
 			}
-			@media (max-width: 480px) {
-				.stats {
-					grid-template-columns: repeat(3, 1fr);
-				}
-				.slot-row {
-					grid-template-columns: 80px 1fr 1fr;
-				}
-				.stat-val {
-					font-size: 18px;
-				}
-			}
+			@media (max-width: 540px) {
+    .stat-val { font-size: 18px; }
+    .slot-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 8px 10px;
+    }
+    .slot-time {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--txt);
+        border-bottom: 0.5px solid var(--border);
+        padding-bottom: 6px;
+        margin-bottom: 2px;
+    }
+    .posto { width: 100%; }
+}
 		</style>
 	</head>
 	<body>
@@ -407,7 +413,7 @@
 			<div class="header">
 				<h1>🎭 Mostra "Re Leone" - Volontari</h1>
 				<p>
-					29 maggio - 2 giugno · ore 10:00 - 23:00 · massimo 2 volontari
+					29 maggio - 2 giugno · ore 10:00 - 23:00 · 2 volontari
 					per turno
 				</p>
 			</div>
@@ -810,38 +816,5 @@
 
 			init();
 		</script>
-
-		<!--
-=================================================================
-ISTRUZIONI PER PUBBLICARE SU GITHUB PAGES
-=================================================================
-
-PASSO 1 — Crea il database Firebase (gratis)
-  1. Vai su https://console.firebase.google.com
-  2. Clicca "Aggiungi progetto" → dai un nome → crea
-  3. Nel menu a sinistra: "Realtime Database" → "Crea database"
-     → scegli la regione più vicina (europe-west1) → "Avvia in modalità test"
-  4. Clicca l'icona </> (Web) per registrare l'app web
-  5. Copia i valori di firebaseConfig e incollali in FIREBASE_CONFIG qui sopra
-
-PASSO 2 — Pubblica su GitHub Pages
-  1. Vai su https://github.com → crea un account gratuito
-  2. Clicca "New repository" → nome es. "mostra-volontari" → Public → Create
-  3. Clicca "uploading an existing file" → trascina questo file HTML → Commit
-  4. Vai su Settings → Pages → Branch: main → Save
-  5. Dopo ~1 minuto il tuo link sarà:
-     https://TUONOMEUTENTE.github.io/mostra-volontari/volontari-mostra.html
-
-PASSO 3 — Regole di sicurezza Firebase (dopo la mostra)
-  Nel Realtime Database → Rules, imposta:
-  {
-    "rules": {
-      ".read": true,
-      ".write": true
-    }
-  }
-  (Modalità test dura 30 giorni — sufficiente per la tua mostra)
-=================================================================
--->
 	</body>
 </html>
