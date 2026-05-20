@@ -5,10 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Volontari — Mostra Scenografica</title>
 
-		<script type="module">
-			import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-			import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
-
+		<script>
 			const FIREBASE_CONFIG = {
 				apiKey: "AIzaSyDKdIO_IwB1GHnXsKAJ8di-sTaUNG3XQlo",
 				authDomain: "prenotazione-mostra--re-leone.firebaseapp.com",
@@ -18,14 +15,9 @@
 				storageBucket:
 					"prenotazione-mostra--re-leone.firebasestorage.app",
 				messagingSenderId: "638988869854",
-				appId: "1:638988869854:web:5d05502186485cd922624f",
-				measurementId: "G-3D914WFR55",
+				appId: "1:638988869854:web:5d05502186485cd922624f"
 			};
 			const CONFIGURATO = !FIREBASE_CONFIG.apiKey.includes("INCOLLA");
-
-			// Initialize Firebase
-			const app = initializeApp(FIREBASE_CONFIG);
-			const analytics = getAnalytics(app);
 		</script>
 
 		<style>
