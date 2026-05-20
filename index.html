@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Volontari — Mostra Scenografica</title>
+		<title>Volontari - Mostra "Re Leone"</title>
 
 		<script>
 			const FIREBASE_CONFIG = {
@@ -381,6 +381,14 @@
 				font-size: 11px;
 				color: var(--txt3);
 			}
+			/* Seleziona Giorno */
+			.sel-day {
+				font-size: 14px;
+				font-weight: 500;
+				color: var(--txt2);
+				margin-bottom: 0.5rem;
+				border: #ef9f27;
+			}
 			@media (max-width: 480px) {
 				.stats {
 					grid-template-columns: repeat(3, 1fr);
@@ -397,9 +405,9 @@
 	<body>
 		<div class="card">
 			<div class="header">
-				<h1>🎭 Mostra Scenografica — Volontari</h1>
+				<h1>🎭 Mostra "Re Leone" - Volontari</h1>
 				<p>
-					29 maggio – 2 giugno · ore 10:00–23:00 · massimo 2 volontari
+					29 maggio - 2 giugno · ore 10:00 - 23:00 · massimo 2 volontari
 					per turno
 				</p>
 			</div>
@@ -425,6 +433,8 @@
 					<div class="stat-val" id="s-pre">—</div>
 				</div>
 			</div>
+
+			<h3 class="sel-day">Seleziona giorno</h3>
 
 			<div class="days" id="days"></div>
 
