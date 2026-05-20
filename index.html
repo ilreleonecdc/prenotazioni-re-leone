@@ -15,7 +15,7 @@
 				storageBucket:
 					"prenotazione-mostra--re-leone.firebasestorage.app",
 				messagingSenderId: "638988869854",
-				appId: "1:638988869854:web:5d05502186485cd922624f"
+				appId: "1:638988869854:web:5d05502186485cd922624f",
 			};
 			const CONFIGURATO = !FIREBASE_CONFIG.apiKey.includes("INCOLLA");
 		</script>
@@ -173,13 +173,17 @@
 			}
 			.slot-row {
 				display: grid;
-				grid-template-columns: 100px 1fr 1fr;
+				grid-template-columns: 100px 1fr;
 				gap: 8px;
 				align-items: center;
 				padding: 7px 10px;
 				border-radius: var(--rad);
 				border: 0.5px solid var(--border);
 				background: var(--bg);
+			}
+			.posti-wrap {
+				display: flex;
+				gap: 8px;
 			}
 			.slot-time {
 				font-size: 13px;
@@ -188,6 +192,7 @@
 			}
 			.posto {
 				display: flex;
+				flex: 1;
 				align-items: center;
 				gap: 6px;
 				padding: 5px 10px;
@@ -390,22 +395,20 @@
 				border: #ef9f27;
 			}
 			@media (max-width: 540px) {
-    .stat-val { font-size: 18px; }
-    .slot-row {
-        grid-template-columns: 1fr;
-        gap: 5px;
-        padding: 8px 10px;
-    }
-    .slot-time {
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--txt);
-        border-bottom: 0.5px solid var(--border);
-        padding-bottom: 6px;
-        margin-bottom: 2px;
-    }
-    .posto { width: 100%; }
-}
+				.stat-val {
+					font-size: 18px;
+				}
+				.slot-row {
+					grid-template-columns: 80px 1fr;
+				}
+				.posti-wrap {
+					flex-direction: column;
+					gap: 5px;
+				}
+				.posto {
+					width: 100%;
+				}
+			}
 		</style>
 	</head>
 	<body>
@@ -413,8 +416,8 @@
 			<div class="header">
 				<h1>🎭 Mostra "Re Leone" - Volontari</h1>
 				<p>
-					29 maggio - 2 giugno · ore 10:00 - 23:00 · 2 volontari
-					per turno
+					29 maggio - 2 giugno · ore 10:00 - 23:00 · 2 volontari per
+					turno
 				</p>
 			</div>
 
@@ -667,10 +670,7 @@
       </div>`;
 						})
 						.join("");
-					return `<div class="slot-row">
-      <span class="slot-time">${hStr}</span>
-      ${posti}
-    </div>`;
+					return `<div class="slot-row"><span class="slot-time">${hStr}</span><div class="posti-wrap">${posti}</div></div>`;
 				}).join("");
 
 				if (adminOpen) renderAdmin();
