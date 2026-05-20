@@ -748,7 +748,10 @@
 			}
 
 			function conferma() {
-				const nome = document.getElementById("nomeInput").value.trim();
+				const nome = document
+					.getElementById("nomeInput")
+					.value.trim()
+					.replace(/\b\w/g, (c) => c.toUpperCase());
 				if (!nome) {
 					document.getElementById("nomeInput").focus();
 					return;
