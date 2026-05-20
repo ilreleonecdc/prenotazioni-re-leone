@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="it">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Volontari — Mostra Scenografica</title>
+
+		<script type="module">
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+			import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
+
+			const FIREBASE_CONFIG = {
+				apiKey: "AIzaSyDKdIO_IwB1GHnXsKAJ8di-sTaUNG3XQlo",
+				authDomain: "prenotazione-mostra--re-leone.firebaseapp.com",
+				databaseURL:
+					"https://prenotazione-mostra--re-leone-default-rtdb.europe-west1.firebasedatabase.app",
+				projectId: "prenotazione-mostra--re-leone",
+				storageBucket:
+					"prenotazione-mostra--re-leone.firebasestorage.app",
+				messagingSenderId: "638988869854",
+				appId: "1:638988869854:web:5d05502186485cd922624f",
+				measurementId: "G-3D914WFR55",
+			};
+			const CONFIGURATO = !FIREBASE_CONFIG.apiKey.includes("INCOLLA");
+
+			// Initialize Firebase
+			const app = initializeApp(FIREBASE_CONFIG);
+			const analytics = getAnalytics(app);
+		</script>
+
+		<style>
+			:root {
+				--bg: #ffffff;
+				--bg2: #f7f6f3;
+				--bg3: #f0ede8;
+				--txt: #1a1a1a;
+				--txt2: #666;
+				--txt3: #999;
+				--border: rgba(0, 0, 0, 0.12);
+				--border2: rgba(0, 0, 0, 0.22);
+				--green-bg: #eaf3de;
+				--green-bd: #97c459;
+				--green-tx: #3b6d11;
+				--blue-bg: #e6f1fb;
+				--blue-bd: #85b7eb;
+				--blue-tx: #185fa5;
+				--rad: 8px;
+				--rad-lg: 12px;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #1c1c1e;
+					--bg2: #2c2c2e;
+					--bg3: #3a3a3c;
+					--txt: #f2f2f7;
+					--txt2: #aeaeb2;
+					--txt3: #636366;
+					--border: rgba(255, 255, 255, 0.12);
+					--border2: rgba(255, 255, 255, 0.22);
+					--green-bg: #1a2e0a;
+					--green-bd: #3b6d11;
+					--green-tx: #c0dd97;
+					--blue-bg: #042c53;
+					--blue-bd: #185fa5;
+					--blue-tx: #b5d4f4;
+				}
+			}
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				font-family:
+					-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+					Arial, sans-serif;
+				background: var(--bg3);
+				color: var(--txt);
+				min-height: 100vh;
+				padding: 1.5rem 1rem 3rem;
+			}
+			.card {
+				background: var(--bg);
+				border-radius: var(--rad-lg);
+				border: 0.5px solid var(--border);
+				padding: 1.25rem;
+				max-width: 700px;
+				margin: 0 auto;
+			}
+			/* Header */
+			.header {
+				margin-bottom: 1.5rem;
+			}
+			.header h1 {
+				font-size: 20px;
+				font-weight: 600;
+			}
+			.header p {
+				font-size: 13px;
+				color: var(--txt2);
+				margin-top: 4px;
+			}
+			/* Stats */
+			.stats {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 8px;
+				margin-bottom: 1.5rem;
+			}
+			.stat {
+				background: var(--bg2);
+				border-radius: var(--rad);
+				padding: 10px 12px;
+			}
+			.stat-lbl {
+				font-size: 11px;
+				color: var(--txt2);
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+			}
+			.stat-val {
+				font-size: 22px;
+				font-weight: 600;
+				margin-top: 2px;
+			}
+			/* Day tabs */
+			.days {
+				display: flex;
+				gap: 6px;
+				flex-wrap: wrap;
+				margin-bottom: 1rem;
+			}
+			.day-btn {
+				padding: 6px 14px;
+				border-radius: var(--rad);
+				border: 0.5px solid var(--border2);
+				font-size: 13px;
+				cursor: pointer;
+				background: var(--bg);
+				color: var(--txt2);
+				transition: all 0.12s;
+			}
+			.day-btn:hover {
+				background: var(--bg2);
+				color: var(--txt);
+			}
+			.day-btn.active {
+				background: var(--bg2);
+				color: var(--txt);
+				font-weight: 600;
+				border-color: var(--border2);
+			}
+			/* Legend */
+			.legend {
+				display: flex;
+				gap: 14px;
+				margin-bottom: 0.75rem;
+				font-size: 12px;
+				color: var(--txt2);
+				flex-wrap: wrap;
+			}
+			.legend span {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+			}
+			.dot {
+				width: 9px;
+				height: 9px;
+				border-radius: 50%;
+				display: inline-block;
+				flex-shrink: 0;
+			}
+			/* Slots */
+			.slots {
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+			}
+			.slot-row {
+				display: grid;
+				grid-template-columns: 100px 1fr 1fr;
+				gap: 8px;
+				align-items: center;
+				padding: 7px 10px;
+				border-radius: var(--rad);
+				border: 0.5px solid var(--border);
+				background: var(--bg);
+			}
+			.slot-time {
+				font-size: 13px;
+				font-weight: 500;
+				color: var(--txt2);
+			}
+			.posto {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				padding: 5px 10px;
+				border-radius: var(--rad);
+				font-size: 12px;
+				border: 0.5px solid var(--border);
+				cursor: pointer;
+				min-width: 0;
+				overflow: hidden;
+				transition: all 0.12s;
+			}
+			.posto svg {
+				flex-shrink: 0;
+			}
+			.posto-nome {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.posto.libero {
+				background: var(--bg2);
+				color: var(--txt2);
+			}
+			.posto.libero:hover {
+				border-color: var(--border2);
+				color: var(--txt);
+			}
+			.posto.occupato {
+				background: var(--green-bg);
+				border-color: var(--green-bd);
+				color: var(--green-tx);
+				cursor: default;
+			}
+			.posto.mio {
+				background: var(--blue-bg);
+				border-color: var(--blue-bd);
+				color: var(--blue-tx);
+			}
+			.posto.mio:hover {
+				background: #faece7;
+				border-color: #f0997b;
+				color: #993c1d;
+			}
+			/* Modal */
+			.modal-overlay {
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.4);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 999;
+				padding: 1rem;
+			}
+			.modal {
+				background: var(--bg);
+				border-radius: var(--rad-lg);
+				border: 0.5px solid var(--border2);
+				padding: 1.5rem;
+				width: min(340px, 100%);
+			}
+			.modal h2 {
+				font-size: 16px;
+				font-weight: 600;
+				margin-bottom: 4px;
+			}
+			.modal p {
+				font-size: 13px;
+				color: var(--txt2);
+				margin-bottom: 1rem;
+			}
+			.modal input {
+				width: 100%;
+				padding: 9px 12px;
+				border: 0.5px solid var(--border2);
+				border-radius: var(--rad);
+				font-size: 14px;
+				background: var(--bg);
+				color: var(--txt);
+				margin-bottom: 12px;
+				outline: none;
+			}
+			.modal input:focus {
+				border-color: #378add;
+				box-shadow: 0 0 0 3px rgba(55, 138, 221, 0.15);
+			}
+			.modal-actions {
+				display: flex;
+				gap: 8px;
+				justify-content: flex-end;
+			}
+			.btn {
+				padding: 7px 16px;
+				border-radius: var(--rad);
+				border: 0.5px solid var(--border2);
+				font-size: 13px;
+				cursor: pointer;
+				background: var(--bg);
+				color: var(--txt);
+				transition: all 0.12s;
+			}
+			.btn:hover {
+				background: var(--bg2);
+			}
+			.btn-primary {
+				background: var(--txt);
+				color: var(--bg);
+				border-color: var(--txt);
+			}
+			.btn-primary:hover {
+				opacity: 0.85;
+			}
+			.btn-ghost {
+				border-color: transparent;
+				color: var(--txt2);
+			}
+			/* Loading */
+			.loading {
+				text-align: center;
+				padding: 2rem;
+				color: var(--txt2);
+				font-size: 14px;
+			}
+			/* Setup banner */
+			.setup-banner {
+				background: #faeeda;
+				border: 0.5px solid #ef9f27;
+				border-radius: var(--rad);
+				padding: 12px 14px;
+				margin-bottom: 1rem;
+				font-size: 13px;
+				color: #633806;
+				line-height: 1.5;
+			}
+			.setup-banner strong {
+				font-weight: 600;
+			}
+			/* Admin */
+			.admin-toggle {
+				font-size: 12px;
+				color: var(--txt3);
+				text-align: right;
+				margin-top: 1.25rem;
+				cursor: pointer;
+				text-decoration: underline;
+			}
+			.admin-panel {
+				margin-top: 1rem;
+				padding: 1rem;
+				background: var(--bg2);
+				border-radius: var(--rad-lg);
+				border: 0.5px solid var(--border);
+			}
+			.admin-panel h3 {
+				font-size: 14px;
+				font-weight: 600;
+				margin-bottom: 10px;
+			}
+			.admin-table {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 12px;
+			}
+			.admin-table th {
+				text-align: left;
+				color: var(--txt2);
+				padding: 4px 8px;
+				border-bottom: 0.5px solid var(--border2);
+				font-weight: 500;
+			}
+			.admin-table td {
+				padding: 5px 8px;
+				border-bottom: 0.5px solid var(--border);
+			}
+			.admin-table tr:last-child td {
+				border-bottom: none;
+			}
+			.no-data {
+				color: var(--txt3);
+				font-style: italic;
+				padding: 8px;
+			}
+			.export-btn {
+				margin-top: 10px;
+				font-size: 12px;
+			}
+			/* Footer */
+			.footer {
+				text-align: center;
+				margin-top: 1.5rem;
+				font-size: 11px;
+				color: var(--txt3);
+			}
+			@media (max-width: 480px) {
+				.stats {
+					grid-template-columns: repeat(3, 1fr);
+				}
+				.slot-row {
+					grid-template-columns: 80px 1fr 1fr;
+				}
+				.stat-val {
+					font-size: 18px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="card">
+			<div class="header">
+				<h1>🎭 Mostra Scenografica — Volontari</h1>
+				<p>
+					29 maggio – 2 giugno · ore 10:00–23:00 · massimo 2 volontari
+					per turno
+				</p>
+			</div>
+
+			<div id="setup-banner" style="display: none" class="setup-banner">
+				<strong>Configurazione Firebase mancante.</strong> Apri il file
+				HTML, cerca <code>FIREBASE_CONFIG</code> e sostituisci i valori
+				con quelli del tuo progetto Firebase. Vedi le istruzioni in
+				fondo alla pagina.
+			</div>
+
+			<div class="stats">
+				<div class="stat">
+					<div class="stat-lbl">Turni totali</div>
+					<div class="stat-val" id="s-tot">—</div>
+				</div>
+				<div class="stat">
+					<div class="stat-lbl">Posti liberi</div>
+					<div class="stat-val" id="s-lib">—</div>
+				</div>
+				<div class="stat">
+					<div class="stat-lbl">Prenotati</div>
+					<div class="stat-val" id="s-pre">—</div>
+				</div>
+			</div>
+
+			<div class="days" id="days"></div>
+
+			<div class="legend">
+				<span
+					><span
+						class="dot"
+						style="
+							background: var(--bg2);
+							border: 0.5px solid var(--border2);
+						"
+					></span
+					>Libero</span
+				>
+				<span
+					><span
+						class="dot"
+						style="background: var(--green-bd)"
+					></span
+					>Prenotato</span
+				>
+				<span
+					><span class="dot" style="background: var(--blue-bd)"></span
+					>Il tuo turno (tocca per cancellare)</span
+				>
+			</div>
+
+			<div id="loading" class="loading">Caricamento in corso…</div>
+			<div class="slots" id="slots" style="display: none"></div>
+
+			<div class="admin-toggle" id="adminToggle">Vista organizzatore</div>
+			<div class="admin-panel" id="adminPanel" style="display: none">
+				<h3>📋 Tutte le prenotazioni</h3>
+				<table class="admin-table">
+					<thead>
+						<tr>
+							<th>Giorno</th>
+							<th>Orario</th>
+							<th>Volontari</th>
+						</tr>
+					</thead>
+					<tbody id="adminBody"></tbody>
+				</table>
+				<button class="btn export-btn" onclick="exportCSV()">
+					⬇ Esporta CSV
+				</button>
+			</div>
+		</div>
+
+		<div class="footer">
+			Mostra Scenografica · Sistema prenotazione volontari
+		</div>
+
+		<!-- Modal -->
+		<div class="modal-overlay" id="modalOverlay" style="display: none">
+			<div class="modal">
+				<h2 id="modal-title">Prenota turno</h2>
+				<p id="modal-desc"></p>
+				<input
+					type="text"
+					id="nomeInput"
+					placeholder="Il tuo nome e cognome…"
+					maxlength="50"
+					onkeydown="if (event.key === 'Enter') conferma();"
+				/>
+				<div class="modal-actions">
+					<button class="btn btn-ghost" onclick="chiudiModal()">
+						Annulla
+					</button>
+					<button class="btn btn-primary" onclick="conferma()">
+						Conferma
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Firebase SDK -->
+		<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+		<script>
+			const GIORNI = [
+				{ label: "Ven 29/5", key: "ven29", full: "Venerdì 29 maggio" },
+				{ label: "Sab 30/5", key: "sab30", full: "Sabato 30 maggio" },
+				{ label: "Dom 31/5", key: "dom31", full: "Domenica 31 maggio" },
+				{ label: "Lun 1/6", key: "lun01", full: "Lunedì 1 giugno" },
+				{ label: "Mar 2/6", key: "mar02", full: "Martedì 2 giugno" },
+			];
+			const ORE = Array.from({ length: 13 }, (_, i) => 10 + i);
+
+			let db_firebase = null;
+			let dbRef = null;
+			let localData = {};
+			let miei = JSON.parse(sessionStorage.getItem("miei_turni") || "[]");
+			let giornoCorrente = GIORNI[0].key;
+			let pending = null;
+			let adminOpen = false;
+
+			// Icone SVG inline
+			const ico = {
+				plus: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+				user: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`,
+				x: `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+			};
+
+			function salvaSessione() {
+				sessionStorage.setItem("miei_turni", JSON.stringify(miei));
+			}
+
+			function init() {
+				if (!CONFIGURATO) {
+					document.getElementById("setup-banner").style.display =
+						"block";
+					document.getElementById("loading").textContent =
+						"In attesa di configurazione Firebase.";
+					usaLocalStorage();
+					return;
+				}
+				try {
+					firebase.initializeApp(FIREBASE_CONFIG);
+					db_firebase = firebase.database();
+					dbRef = db_firebase.ref("mostra_volontari");
+					dbRef.on("value", (snap) => {
+						localData = snap.val() || {};
+						GIORNI.forEach((g) => {
+							if (!localData[g.key]) localData[g.key] = {};
+							ORE.forEach((h) => {
+								if (!localData[g.key][h])
+									localData[g.key][h] = [];
+							});
+						});
+						document.getElementById("loading").style.display =
+							"none";
+						document.getElementById("slots").style.display = "flex";
+						render();
+					});
+				} catch (e) {
+					console.error(e);
+					document.getElementById("loading").textContent =
+						"Errore di connessione. Ricarica la pagina.";
+				}
+			}
+
+			function usaLocalStorage() {
+				const saved = localStorage.getItem("mostra_local");
+				localData = saved ? JSON.parse(saved) : {};
+				GIORNI.forEach((g) => {
+					if (!localData[g.key]) localData[g.key] = {};
+					ORE.forEach((h) => {
+						if (!localData[g.key][h]) localData[g.key][h] = [];
+					});
+				});
+				document.getElementById("loading").style.display = "none";
+				document.getElementById("slots").style.display = "flex";
+				render();
+			}
+
+			function salva() {
+				if (dbRef) {
+					dbRef.set(localData);
+				} else {
+					localStorage.setItem(
+						"mostra_local",
+						JSON.stringify(localData),
+					);
+					render();
+				}
+			}
+
+			function totali() {
+				let tot = 0,
+					lib = 0,
+					pre = 0;
+				GIORNI.forEach((g) =>
+					ORE.forEach((h) => {
+						const s = localData[g.key]?.[h] || [];
+						const n = Array.isArray(s)
+							? s.filter(Boolean).length
+							: Object.keys(s).length;
+						tot += 2;
+						pre += n;
+						lib += 2 - n;
+					}),
+				);
+				return { tot, lib, pre };
+			}
+
+			function getSlot(gKey, h) {
+				const raw = localData[gKey]?.[h];
+				if (!raw) return [];
+				if (Array.isArray(raw)) return raw.filter(Boolean);
+				return Object.values(raw).filter(Boolean);
+			}
+
+			function render() {
+				const { tot, lib, pre } = totali();
+				document.getElementById("s-tot").textContent = tot;
+				document.getElementById("s-lib").textContent = lib;
+				document.getElementById("s-pre").textContent = pre;
+
+				// Day tabs
+				document.getElementById("days").innerHTML = GIORNI.map(
+					(g) =>
+						`<button class="day-btn${g.key === giornoCorrente ? " active" : ""}" onclick="cambiaGiorno('${g.key}')">${g.label}</button>`,
+				).join("");
+
+				// Slots
+				document.getElementById("slots").innerHTML = ORE.map((h) => {
+					const pren = getSlot(giornoCorrente, h);
+					const hStr = `${String(h).padStart(2, "0")}:00–${String(h + 1).padStart(2, "0")}:00`;
+					const posti = [0, 1]
+						.map((i) => {
+							const p = pren[i];
+							if (p) {
+								const mio = miei.includes(p.id);
+								return `<div class="posto ${mio ? "mio" : "occupato"}"
+          ${mio ? `onclick="cancella('${giornoCorrente}',${h},'${p.id}')" title="Clicca per cancellare"` : ""}>
+          ${mio ? ico.x : ico.user}
+          <span class="posto-nome">${escHtml(p.nome)}</span>
+        </div>`;
+							}
+							return `<div class="posto libero" onclick="apriModal('${giornoCorrente}',${h},${i})">
+        ${ico.plus}<span>Disponibile</span>
+      </div>`;
+						})
+						.join("");
+					return `<div class="slot-row">
+      <span class="slot-time">${hStr}</span>
+      ${posti}
+    </div>`;
+				}).join("");
+
+				if (adminOpen) renderAdmin();
+			}
+
+			function cambiaGiorno(k) {
+				giornoCorrente = k;
+				render();
+			}
+
+			function apriModal(giorno, ora, idx) {
+				pending = { giorno, ora, idx };
+				const gFull =
+					GIORNI.find((g) => g.key === giorno)?.full || giorno;
+				document.getElementById("modal-title").textContent =
+					"Prenota turno";
+				document.getElementById("modal-desc").textContent =
+					`${gFull} · ${String(ora).padStart(2, "0")}:00–${String(ora + 1).padStart(2, "0")}:00`;
+				document.getElementById("nomeInput").value = "";
+				document.getElementById("modalOverlay").style.display = "flex";
+				setTimeout(
+					() => document.getElementById("nomeInput").focus(),
+					80,
+				);
+			}
+
+			function chiudiModal() {
+				document.getElementById("modalOverlay").style.display = "none";
+				pending = null;
+			}
+
+			function conferma() {
+				const nome = document.getElementById("nomeInput").value.trim();
+				if (!nome) {
+					document.getElementById("nomeInput").focus();
+					return;
+				}
+				const { giorno, ora, idx } = pending;
+				const slot = getSlot(giorno, ora);
+				if (slot.length >= 2 || (slot[idx] && slot.length > idx)) {
+					alert(
+						"Questo posto è stato appena occupato da qualcun altro. Riprova con un altro slot!",
+					);
+					chiudiModal();
+					return;
+				}
+				const id =
+					Date.now().toString(36) +
+					Math.random().toString(36).slice(2, 6);
+				const entry = { nome, id };
+				if (!localData[giorno]) localData[giorno] = {};
+				if (!localData[giorno][ora]) localData[giorno][ora] = [];
+				if (!Array.isArray(localData[giorno][ora])) {
+					localData[giorno][ora] = Object.values(
+						localData[giorno][ora],
+					).filter(Boolean);
+				}
+				localData[giorno][ora].push(entry);
+				miei.push(id);
+				salvaSessione();
+				salva();
+				chiudiModal();
+			}
+
+			function cancella(giorno, ora, id) {
+				if (!miei.includes(id)) return;
+				if (!confirm("Vuoi cancellare la tua prenotazione?")) return;
+				if (!Array.isArray(localData[giorno][ora])) {
+					localData[giorno][ora] = Object.values(
+						localData[giorno][ora],
+					).filter(Boolean);
+				}
+				localData[giorno][ora] = localData[giorno][ora].filter(
+					(p) => p.id !== id,
+				);
+				miei = miei.filter((m) => m !== id);
+				salvaSessione();
+				salva();
+			}
+
+			function renderAdmin() {
+				const rows = [];
+				GIORNI.forEach((g) =>
+					ORE.forEach((h) => {
+						const s = getSlot(g.key, h);
+						if (s.length) {
+							rows.push(`<tr>
+        <td>${g.full}</td>
+        <td>${String(h).padStart(2, "0")}:00–${String(h + 1).padStart(2, "0")}:00</td>
+        <td>${s.map((p) => escHtml(p.nome)).join(", ")}</td>
+      </tr>`);
+						}
+					}),
+				);
+				document.getElementById("adminBody").innerHTML = rows.length
+					? rows.join("")
+					: `<tr><td colspan="3" class="no-data">Nessuna prenotazione ancora.</td></tr>`;
+			}
+
+			function exportCSV() {
+				let csv = "\uFEFFGiorno,Orario,Volontario\n";
+				GIORNI.forEach((g) =>
+					ORE.forEach((h) => {
+						const s = getSlot(g.key, h);
+						s.forEach((p) => {
+							csv += `"${g.full}","${String(h).padStart(2, "0")}:00–${String(h + 1).padStart(2, "0")}:00","${p.nome}"\n`;
+						});
+					}),
+				);
+				const a = document.createElement("a");
+				a.href = URL.createObjectURL(
+					new Blob([csv], { type: "text/csv;charset=utf-8" }),
+				);
+				a.download = "volontari_mostra.csv";
+				a.click();
+			}
+
+			function escHtml(s) {
+				return String(s)
+					.replace(/&/g, "&amp;")
+					.replace(/</g, "&lt;")
+					.replace(/>/g, "&gt;")
+					.replace(/"/g, "&quot;");
+			}
+
+			document.getElementById("adminToggle").onclick = () => {
+				adminOpen = !adminOpen;
+				document.getElementById("adminPanel").style.display = adminOpen
+					? "block"
+					: "none";
+				document.getElementById("adminToggle").textContent = adminOpen
+					? "Nascondi"
+					: "Vista organizzatore";
+				if (adminOpen) renderAdmin();
+			};
+
+			document
+				.getElementById("modalOverlay")
+				.addEventListener("click", (e) => {
+					if (e.target === document.getElementById("modalOverlay"))
+						chiudiModal();
+				});
+
+			init();
+		</script>
+
+		<!--
+=================================================================
+ISTRUZIONI PER PUBBLICARE SU GITHUB PAGES
+=================================================================
+
+PASSO 1 — Crea il database Firebase (gratis)
+  1. Vai su https://console.firebase.google.com
+  2. Clicca "Aggiungi progetto" → dai un nome → crea
+  3. Nel menu a sinistra: "Realtime Database" → "Crea database"
+     → scegli la regione più vicina (europe-west1) → "Avvia in modalità test"
+  4. Clicca l'icona </> (Web) per registrare l'app web
+  5. Copia i valori di firebaseConfig e incollali in FIREBASE_CONFIG qui sopra
+
+PASSO 2 — Pubblica su GitHub Pages
+  1. Vai su https://github.com → crea un account gratuito
+  2. Clicca "New repository" → nome es. "mostra-volontari" → Public → Create
+  3. Clicca "uploading an existing file" → trascina questo file HTML → Commit
+  4. Vai su Settings → Pages → Branch: main → Save
+  5. Dopo ~1 minuto il tuo link sarà:
+     https://TUONOMEUTENTE.github.io/mostra-volontari/volontari-mostra.html
+
+PASSO 3 — Regole di sicurezza Firebase (dopo la mostra)
+  Nel Realtime Database → Rules, imposta:
+  {
+    "rules": {
+      ".read": true,
+      ".write": true
+    }
+  }
+  (Modalità test dura 30 giorni — sufficiente per la tua mostra)
+=================================================================
+-->
+	</body>
+</html>
