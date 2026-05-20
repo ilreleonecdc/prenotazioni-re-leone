@@ -470,11 +470,13 @@
 					>Libero</span
 				>
 				<span
-					><span
-						class="dot"
-						style="background: var(--green-bd)"
-					></span
-					>Prenotato</span
+					><span 
+						 class="dot" style="background:var(--green-bd)"></span'
+					>Completo</span
+								 >
+                <span
+					><span class="dot" style="background:var(--amber-bd)"></span
+					>Incompleto</span
 				>
 				<span
 					><span class="dot" style="background: var(--blue-bd)"></span
@@ -664,7 +666,7 @@
 				// Slots
 				document.getElementById("slots").innerHTML = ORE.map((h) => {
 					const pren = getSlot(giornoCorrente, h);
-					const hStr = `${String(h).padStart(2, "0")}:00–${String(h + 1).padStart(2, "0")}:00`;
+					const hStr = `${String(h).padStart(2, "0")}:00-${String(h + 1).padStart(2, "0")}:00`;
 					const posti = [0, 1]
 						.map((i) => {
 							const p = pren[i];
