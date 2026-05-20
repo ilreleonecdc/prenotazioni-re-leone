@@ -585,7 +585,25 @@
 					</div>
 				</div>
 				<div id="adminContent" style="display: none">
-					<h3>📋 Tutte le prenotazioni</h3>
+					<div
+						style="
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							margin-bottom: 10px;
+						"
+					>
+						<h3 style="margin-bottom: 0">
+							📋 Tutte le prenotazioni
+						</h3>
+						<button
+							class="btn export-btn"
+							onclick="exportCSV()"
+							style="margin-top: 0"
+						>
+							⬇ Esporta CSV
+						</button>
+					</div>
 					<table class="admin-table">
 						<thead>
 							<tr>
@@ -597,9 +615,6 @@
 						</thead>
 						<tbody id="adminBody"></tbody>
 					</table>
-					<button class="btn export-btn" onclick="exportCSV()">
-						⬇ Esporta CSV
-					</button>
 				</div>
 			</div>
 		</div>
@@ -975,7 +990,7 @@
 						s.forEach((p) => {
 							rows.push(`<tr>
         <td>${g.full}</td>
-        <td>${String(h).padStart(2, "0")}:00–${String(h + 1).padStart(2, "0")}:00</td>
+        <td>${String(h).padStart(2, "0")}:00-${String(h + 1).padStart(2, "0")}:00</td>
         <td>${escHtml(p.nome)}</td>
         <td><button class="btn-delete" onclick="cancellaAdmin('${g.key}',${h},'${p.id}')">✕ Rimuovi</button></td>
       </tr>`);
