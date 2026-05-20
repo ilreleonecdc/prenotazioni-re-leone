@@ -733,7 +733,7 @@
 				document.getElementById("modal-title").textContent =
 					"Prenota turno";
 				document.getElementById("modal-desc").textContent =
-					`${gFull} · ${String(ora).padStart(2, "0")}:00–${String(ora + 1).padStart(2, "0")}:00`;
+					`${gFull} · ${String(ora).padStart(2, "0")}:00-${String(ora + 1).padStart(2, "0")}:00`;
 				document.getElementById("nomeInput").value = "";
 				document.getElementById("modalOverlay").style.display = "flex";
 				setTimeout(
@@ -807,7 +807,7 @@
 						if (s.length) {
 							rows.push(`<tr>
         <td>${g.full}</td>
-        <td>${String(h).padStart(2, "0")}:00–${String(h + 1).padStart(2, "0")}:00</td>
+        <td>${String(h).padStart(2, "0")}:00-${String(h + 1).padStart(2, "0")}:00</td>
         <td>${s.map((p) => escHtml(p.nome)).join(", ")}</td>
       </tr>`);
 						}
@@ -824,7 +824,7 @@
 					ORE.forEach((h) => {
 						const s = getSlot(g.key, h);
 						s.forEach((p) => {
-							csv += `"${g.full}","${String(h).padStart(2, "0")}:00–${String(h + 1).padStart(2, "0")}:00","${p.nome}"\n`;
+							csv += `"${g.full}","${String(h).padStart(2, "0")}:00-${String(h + 1).padStart(2, "0")}:00","${p.nome}"\n`;
 						});
 					}),
 				);
